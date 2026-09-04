@@ -1,0 +1,15 @@
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.DS_Store
+node_modules/
+test-results/
+
+# Generated source download and hosting identity
+dist/download/
+.openai/

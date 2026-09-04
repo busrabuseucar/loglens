@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Giriş kayıtlarını üç açıklanabilir güvenlik kuralıyla analiz et. CSV dosyan yalnızca tarayıcında işlenir.">
+  <meta name="theme-color" content="#101c2e">
+  <title>LogLens — Giriş kaydı analizi</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./readability.css">
+  <link rel="stylesheet" href="./experiment.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">İçeriğe geç</a>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="./" aria-label="LogLens ana sayfa"><span class="brand-mark" aria-hidden="true">L<span></span></span><span>LogLens<small>AUTH LOG ANALYZER</small></span></a>
+    <div class="nav-caption">ÇALIŞMA ALANI</div>
+    <nav aria-label="Ana gezinme">
+      <button class="nav-item active" data-view="overview" aria-pressed="true"><span aria-hidden="true">◫</span> Genel bakış <span class="nav-dot"></span></button>
+      <button class="nav-item" data-view="events" aria-pressed="false"><span aria-hidden="true">≡</span> Giriş kayıtları <span id="nav-count" class="nav-count">0</span></button>
+      <button class="nav-item" data-view="rules" aria-pressed="false"><span aria-hidden="true">⌘</span> Analiz kuralları <span class="nav-count">3</span></button>
+      <button class="nav-item" data-view="experiment" aria-pressed="false"><span aria-hidden="true">◷</span> R3 deneyi</button>
+    </nav>
+    <div class="side-note"><span class="outline-icon" aria-hidden="true">⌁</span><strong>Veri sende kalır.</strong><p>Yüklediğin CSV bu tarayıcıda işlenir. Sunucuya gönderilmez.</p></div>
+    <div class="sidebar-footer"><div class="avatar">BU</div><div><strong>Buse Uçar</strong><small>Proje portföyü</small></div><span class="version">v1.1</span></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div><span class="muted">Çalışma alanı</span><span class="crumb">/</span><span id="breadcrumb">Genel bakış</span></div><span class="local-badge"><span aria-hidden="true">◈</span> Yerel analiz</span></header>
+    <main id="main" tabindex="-1">
+      <div class="page-heading"><div><div class="eyebrow">KAYITLARDAN BULGULARA</div><h1 id="page-title">Giriş kaydı analizi</h1><p id="page-description">Şüpheli hareketleri bul. Her bulgunun nedenini gör.</p></div><div class="heading-actions"><button id="export" class="button secondary" disabled><span aria-hidden="true">↓</span> Raporu indir</button><button id="upload" class="button primary"><span aria-hidden="true">↑</span> CSV yükle</button></div></div>
+      <input id="file-input" type="file" accept=".csv,text/csv" hidden>
+      <div id="notification" class="notification" role="status" aria-live="polite" hidden></div>
+      <section class="data-strip" id="dropzone" aria-label="Veri kaynağı">
+        <div class="file-icon" aria-hidden="true">CSV</div><div class="file-info"><strong id="dataset-name">Kayıt bekleniyor</strong><div id="dataset-meta">CSV yükle veya örnek veriyi aç.</div></div><span id="sample-badge" class="badge sample" hidden>Sentetik veri</span><div class="data-actions"><button class="text-button" id="load-sample">Örnek veriyi yükle</button><a href="./template.csv" download="loglens-template.csv">CSV şablonu ↓</a></div>
+      </section>
+      <div id="quality" class="quality" hidden></div>
+      <section id="overview" class="view" aria-label="Analiz özeti">
+        <div class="stats" id="stats"></div>
+        <div class="analysis-grid">
+          <section class="panel timeline-panel"><div class="panel-header"><div><h2>Giriş hareketleri</h2><p id="chart-caption">Zamana göre başarılı ve başarısız girişler</p></div><div class="legend"><span><i class="legend-success"></i>Başarılı</span><span><i class="legend-failure"></i>Başarısız</span></div></div><div id="chart" class="chart"></div><div class="chart-foot"><span>Zaman dilimi: UTC</span><span id="chart-range">—</span></div></section>
+          <section class="panel rule-summary"><div class="panel-header"><div><h2>Kural özeti</h2><p>3 açıklanabilir kontrol</p></div><span class="small-mono">01—03</span></div><div id="rule-counts"></div><button class="text-button rule-link" data-view="rules">Kurallar nasıl çalışır? <span aria-hidden="true">↗</span></button></section>
+        </div>
+        <section class="panel findings-panel"><div class="panel-header"><div class="title-with-count"><h2>İncelenecek bulgular</h2><span id="alert-count" class="count-pill">0</span></div><span class="muted panel-hint">Aynı kayıt birden fazla kuralı tetikleyebilir.</span></div><div class="filter-bar"><label class="search"><span aria-hidden="true">⌕</span><input id="alert-search" type="search" placeholder="IP adresi veya hesap ara" aria-label="Bulgularda IP adresi veya hesap ara"></label><label class="select-wrap"><span>Önem</span><select id="severity-filter"><option value="all">Tümü</option><option value="high">Yüksek</option><option value="medium">Orta</option></select></label><label class="select-wrap"><span>Kural</span><select id="rule-filter"><option value="all">Tüm kurallar</option><option value="R1">R1 · Başarısız giriş</option><option value="R2">R2 · Çoklu hesap</option><option value="R3">R3 · Başarıya dönüş</option></select></label></div><div id="findings" class="table-scroll"></div><div class="panel-foot"><span id="filter-count">Henüz analiz yok.</span><span>Bulgular inceleme gerektirir; saldırı kanıtı değildir.</span></div></section>
+      </section>
+      <section id="events" class="view" aria-label="Giriş kayıtları" hidden><div class="panel"><div class="panel-header"><div><h2>Doğrulanmış kayıtlar</h2><p>Zamana göre sıralı · UTC</p></div><span id="event-summary" class="muted"></span></div><div class="filter-bar"><label class="search"><span aria-hidden="true">⌕</span><input id="event-search" type="search" placeholder="IP, hesap veya kaynak ara" aria-label="Kayıtlarda ara"></label><label class="select-wrap"><span>Sonuç</span><select id="status-filter"><option value="all">Tüm sonuçlar</option><option value="success">Başarılı</option><option value="failure">Başarısız</option></select></label><button id="clear-evidence" class="text-button" hidden>Bulgu filtresini kaldır ×</button></div><div id="events-table" class="table-scroll"></div><div class="pagination"><span id="page-info"></span><div><button id="prev-page" class="button secondary small">← Önceki</button><button id="next-page" class="button secondary small">Sonraki →</button></div></div></div></section>
+      <section id="rules" class="view" aria-label="Analiz kuralları" hidden><div class="rules-intro"><h2>Bir puanın arkasına saklanmayan analiz.</h2><p>Her bulgu sabit bir eşik, zaman aralığı ve kaynak kayıtlarıyla açıklanır. Model eğitimi veya dış servis kullanılmaz.</p></div><div id="rules-grid" class="rules-grid"></div><div class="panel documentation"><h2>CSV veri sözleşmesi</h2><p>UTF-8 kodlamalı, virgül veya noktalı virgülle ayrılmış dosya. Üst sınır: 2 MB / 20.000 veri kaydı.</p><div class="table-scroll"><table><thead><tr><th>Sütun</th><th>Beklenen değer</th><th>Örnek</th></tr></thead><tbody><tr><td><code>timestamp</code></td><td>Saat dilimi içeren ISO 8601; yıl 2000–2100</td><td><code>2026-09-04T12:00:00+03:00</code></td></tr><tr><td><code>ip</code></td><td>IPv4 adresi</td><td><code>192.0.2.10</code></td></tr><tr><td><code>username</code></td><td>Hesap adı, 1–128 karakter</td><td><code>demo_user</code></td></tr><tr><td><code>status</code></td><td>success veya failure</td><td><code>failure</code></td></tr><tr><td><code>source</code></td><td>İsteğe bağlı kaynak, en fazla 128 karakter</td><td><code>vpn</code></td></tr></tbody></table></div><p>Hatalı kayıtlar gerekçeleriyle ayrılır. Aynı zaman, IP, hesap, sonuç ve kaynağa sahip tekrar kayıtları bir kez sayılır. Bilinmeyen ek sütunlar analize katılmaz.</p><a href="./sample.csv" download class="text-button">Tam örnek CSV’yi indir ↓</a></div><div class="limits"><strong>Sonuçları nasıl yorumlamalısın?</strong><p>Paylaşılan ağlar ve yanlış yazılan parolalar da bu kuralları tetikleyebilir. Aynı IP’nin farklı kaynaklardaki kayıtları birlikte incelenir. Temiz sonuç, sistemin güvenli olduğunu kanıtlamaz. İlk sürüm IPv6 veya ham sunucu loglarını desteklemez.</p></div></section>
+      <section id="experiment" class="view" aria-label="R3 zaman penceresi deneyi" hidden>
+        <div class="experiment-intro"><span class="badge sample">Sentetik veri ile deney</span><p>Aynı IP ve hesapta üç başarısız giriş sabit. Başarılı girişin zamanını değiştir; beş dakikalık pencereye kaç hatanın sığdığını gör.</p></div>
+        <div class="experiment-grid">
+          <section class="panel experiment-controls"><div class="panel-header"><div><h2>Başarılı giriş ne zaman olsun?</h2><p>İlk başarısız giriş: 10:25:00 UTC</p></div></div><div class="experiment-body">
+            <label class="experiment-label" for="experiment-delay">İlk hatadan başarıya kadar geçen süre <output id="experiment-duration" for="experiment-delay">2 dk 40 sn</output></label>
+            <input id="experiment-delay" type="range" min="160" max="600" step="1" value="160" aria-describedby="experiment-slider-help">
+            <div class="range-ends"><span>2 dk 40 sn</span><span>10 dk</span></div>
+            <p id="experiment-slider-help" class="experiment-help">Ok tuşlarıyla birer saniye değiştir. Aşağıdaki düğmelerle sınırın iki tarafını karşılaştır.</p>
+            <div class="experiment-presets" role="group" aria-label="Hazır zaman senaryoları"><button class="button secondary" data-delay="160" aria-pressed="true">Orijinal · 2:40</button><button class="button secondary" data-delay="300" aria-pressed="false">Tam sınır · 5:00</button><button class="button secondary" data-delay="301" aria-pressed="false">Sınır +1 sn · 5:01</button><button class="button secondary" data-delay="600" aria-pressed="false">Geç giriş · 10:00</button></div>
+            <div class="experiment-time"><span>Başarılı giriş · UTC</span><strong id="experiment-success-time">10:27:40</strong></div>
+          </div></section>
+          <section class="panel experiment-result" aria-live="polite" aria-atomic="true"><div class="panel-header"><h2>Deney sonucu</h2><span id="experiment-badge" class="badge">Hesaplanıyor</span></div><div class="experiment-body"><div class="experiment-numbers"><div><span>Son 5 dakikadaki hatalar</span><strong id="experiment-failures">—</strong></div><div><span>Örnek veride toplam bulgu</span><strong id="experiment-total">—</strong></div></div><p id="experiment-explanation">Örnek kayıtlar yükleniyor.</p><p class="experiment-footnote">Hesap: demo_analyst<br>IP: 198.51.100.77 · kaynak: vpn</p></div></section>
+        </div>
+        <section class="panel"><div class="panel-header"><div><h2>Dört kaydın pencere içindeki yeri</h2><p id="experiment-window">Başarıdan geriye doğru beş dakika</p></div></div><div id="experiment-records" class="table-scroll"></div><div class="experiment-bottom"><p>Deney, örnek verinin kopyasını kullanır. Yüklediğin dosyanın analizi değişmez.</p><button id="experiment-download" class="button secondary" disabled>Deney CSV’sini indir ↓</button></div></section>
+      </section>
+      <footer class="main-footer"><span>LogLens <span class="footer-divider">/</span> Açıklanabilir giriş kaydı analizi</span><a href="./download/loglens-source.zip" download>Kaynak kodu indir ↓</a></footer>
+    </main>
+  </div>
+</div>
+<dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-top"><span id="detail-rule" class="small-mono"></span><button id="close-dialog" class="icon-button" aria-label="Bulgu detayını kapat">×</button></div><div id="detail-content"></div><div class="dialog-actions"><button id="evidence-button" class="button primary">Kaynak kayıtlarını incele</button><button id="experiment-open" class="button secondary" hidden>R3 deneyini aç</button><button id="close-dialog-bottom" class="button secondary">Kapat</button></div></dialog>
+<noscript><div class="noscript">LogLens’i kullanmak için JavaScript’i etkinleştir.</div></noscript>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "loglens",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/web.test.mjs",
+    "test:parity": "node scripts/check-parity.mjs",
+    "check": "node --check dist/engine.js && node --check dist/experiment.js && node --check dist/app.js"
+  }
+}

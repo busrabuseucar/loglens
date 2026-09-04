@@ -1,0 +1,12 @@
+/* Regular controls remain legible at laptop and phone widths. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.page-heading p{font-size:16px}
+.stat-label,.search input,.select-wrap,.select-wrap select,.finding-name,table,.rule-row strong,.data-actions,.file-info strong{font-size:14px}
+.rule-row small,.rule-link,.stat-note,.badge,.panel-header p,.panel-hint,.file-info>div,.panel-foot,.chart-foot,.legend,.finding-name small,.main-footer{font-size:12px}
+th{font-size:12px}
+.mono,code{font-size:13px}
+.chart text{font-size:12px}
+.rules-intro p,.documentation p,.limits p,.rule-card p,#detail-content p{font-size:16px}
+.main-footer a{text-decoration:none;color:#087c6d;white-space:nowrap}
+.main-footer a:hover{text-decoration:underline}
+@media(max-width:720px){.stat-label{font-size:13px}.stat-note{line-height:1.5;min-height:36px}.page-heading p{font-size:15px}.select-wrap{font-size:12px}.select-wrap select{font-size:13px}.legend{font-size:12px;gap:5px}.panel-header{flex-wrap:wrap}.main-footer{gap:12px}.file-info>div{line-height:1.5}.data-actions button{font-size:14px}.nav-item{font-size:0}.chart-foot{flex-wrap:wrap;gap:6px}}

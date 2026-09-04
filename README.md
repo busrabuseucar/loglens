@@ -6,9 +6,9 @@ LogLens finds suspicious login patterns in a bounded CSV file. Each finding incl
 
 [![LogLens checks](https://github.com/busrabuseucar/loglens/actions/workflows/ci.yml/badge.svg)](https://github.com/busrabuseucar/loglens/actions/workflows/ci.yml)
 
-[Demo — personal access](https://loglens-buse.sleek-brush-8818.chatgpt.site) · [Türkçe öğrenme planı](docs/LEARNING.md) · [CSV example](dist/sample.csv)
+[Live demo](https://loglens-buse.sleek-brush-8818.chatgpt.site) · [Türkçe öğrenme planı](docs/LEARNING.md) · [CSV example](dist/sample.csv)
 
-The hosted demo initially has owner-only access. It is not yet a publicly accessible CV link. This repository contains the complete source. The static `dist/` directory can be hosted on GitHub Pages or another static host after generating the downloadable source bundle.
+The hosted browser demo is public and can be opened by anyone with the link. Use it to try the sample data or analyze a CSV locally in your browser. This repository contains the complete source.
 
 ## What works
 
@@ -171,7 +171,7 @@ Coverage includes exact time-window boundaries, distinct-account counting, succe
 
 ## Demo hosting
 
-The linked Sites demo currently uses personal access. A public repository does not automatically make that hosted demo public. To host a separate public demo, generate the source bundle and publish the `dist/` directory with a static host. GitHub Pages serves the browser demo, not the Python app.
+The linked Sites demo is publicly accessible. To host your own copy, generate the source bundle and publish the `dist/` directory with a static host. GitHub Pages serves the browser demo, not the Python app.
 
 Generated `dist/download/` bundles are intentionally ignored by Git. The CI workflow creates a fresh bundle before validating local asset links. The repository never includes Sites account identifiers or access credentials.
 

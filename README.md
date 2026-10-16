@@ -183,3 +183,7 @@ Source bundles use explicit source paths and file types; local environment files
 A rule-based log analysis project by Büşra Buse Uçar. The rule implementations here are original project code. [Loglizer](https://github.com/logpai/loglizer) was an idea/reference resource; its ML implementation is not embedded in this project.
 
 MIT licensed; see [LICENSE](LICENSE). Dependencies retain their respective licenses.
+
+## İşletim
+
+[İşletim ve sürüm doğrulama](docs/OPERATIONS.md) — kurulum, veri saklama, yayın, geri dönüş ve doğrulama kapsamı.

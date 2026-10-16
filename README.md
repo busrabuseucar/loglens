@@ -177,6 +177,6 @@ Generated `dist/download/` bundles are intentionally ignored by Git. The CI work
 
 ## Attribution
 
-Project prepared for Buse Uçar with AI-assisted implementation. The learning checklist identifies the parts to inspect, explain and extend before making personal skill claims. The rule implementations here are original project code. [Loglizer](https://github.com/logpai/loglizer) was an idea/reference resource; its ML implementation is not embedded in this project.
+A rule-based log analysis project by Büşra Buse Uçar. The learning checklist covers the analysis rules, validation and regression tests. The rule implementations here are original project code. [Loglizer](https://github.com/logpai/loglizer) was an idea/reference resource; its ML implementation is not embedded in this project.
 
 MIT licensed; see [LICENSE](LICENSE). Dependencies retain their respective licenses.

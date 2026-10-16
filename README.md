@@ -6,7 +6,7 @@ LogLens finds suspicious login patterns in a bounded CSV file. Each finding incl
 
 [![LogLens checks](https://github.com/busrabuseucar/loglens/actions/workflows/ci.yml/badge.svg)](https://github.com/busrabuseucar/loglens/actions/workflows/ci.yml)
 
-[Live demo](https://loglens-buse.sleek-brush-8818.chatgpt.site) · [Türkçe öğrenme planı](docs/LEARNING.md) · [CSV example](dist/sample.csv)
+[Live demo](https://loglens-buse.sleek-brush-8818.chatgpt.site) · [CSV example](dist/sample.csv)
 
 The hosted browser demo is public and can be opened by anyone with the link. Use it to try the sample data or analyze a CSV locally in your browser. This repository contains the complete source.
 

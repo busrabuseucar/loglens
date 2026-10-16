@@ -1,5 +1,11 @@
 # LogLens
 
+## Canlı demonun kapsamı
+
+[Demoyu aç](https://loglens-buse.sleek-brush-8818.chatgpt.site)
+
+CSV kayıtları üç açıklanabilir kuralla tarayıcıda analiz edilir. Hazır veri sentetiktir; kendi uygun CSV dosyanı kullanabilirsin. Canlı SIEM bağlantısı veya eğitilmiş model yoktur; bulgu saldırı kanıtı değildir.
+
 **Explainable authentication-log analysis — Python reference app and a browser-only demo.**
 
 LogLens finds suspicious login patterns in a bounded CSV file. Each finding includes the rule, IP address, exact time window, affected accounts and source record numbers. There is no ML model, hidden risk score or claim that a finding proves an attack.

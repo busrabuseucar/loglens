@@ -61,4 +61,4 @@ Bu egzersizden sonra R1'i varsayılan 5 eşiğine geri getir. İkinci küçük k
 
 Projeyi anlayıp kişisel katkını yaptıktan sonra, yaptığın işi **kural tabanlı log analizi, CSV doğrulama, kaynak kayıtlarla açıklama ve test otomasyonu** olarak anlatabilirsin. Bunu “yapay zekâ ile saldırıları kesin tespit eden üretim sistemi” diye yazma. Gerçek kullanıcı, sahada doğrulanmış başarı oranı ve üretim deneyimi bu MVP'de yok.
 
-Mevcut kod AI yardımıyla hazırlandı. Kendi geliştirdiğin bölümleri ve araç kullanımını dürüstçe ayır; çalıştırmadığın veya açıklayamadığın bir şeyi kişisel yetkinlik olarak sunma.
+Kendi geliştirdiğin bölümleri ve araç kullanımını dürüstçe ayır; çalıştırmadığın veya açıklayamadığın bir şeyi kişisel yetkinlik olarak sunma.

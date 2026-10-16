@@ -33,8 +33,17 @@ def parse_csv(text: str) -> dict:
     if len(text.encode("utf-8")) > MAX_BYTES:
         raise ValueError("Dosya en fazla 2 MB olabilir.")
     text = text.removeprefix("\ufeff")
-    first = text.splitlines()[0] if text.splitlines() else ""
-    delimiter = ";" if first.count(";") > first.count(",") else ","
+    # Count separators only outside quoted header fields.
+    counts, quoted = {",": 0, ";": 0}, False
+    for char in text:
+        if char == '"':
+            quoted = not quoted
+        elif not quoted:
+            if char in "\r\n":
+                break
+            if char in counts:
+                counts[char] += 1
+    delimiter = ";" if counts[";"] > counts[","] else ","
     # Strict grammar shared with the browser: quotes may only start a field.
     in_quotes, after_quote, start = False, False, True
     i = 0
@@ -59,7 +68,12 @@ def parse_csv(text: str) -> dict:
         i += 1
     if in_quotes:
         raise ValueError("CSV içinde kapanmamış tırnak var.")
-    rows = list(csv.reader(io.StringIO(text, newline=""), delimiter=delimiter, strict=True))
+    # The file-wide bound also bounds each field; avoid csv's smaller default.
+    csv.field_size_limit(max(csv.field_size_limit(), MAX_BYTES))
+    try:
+        rows = list(csv.reader(io.StringIO(text, newline=""), delimiter=delimiter, strict=True))
+    except csv.Error as exc:
+        raise ValueError("CSV yapısı geçersiz.") from exc
     if not rows:
         raise ValueError("CSV dosyası boş.")
     headers = [h.strip().lower() for h in rows[0]]
@@ -170,3 +184,16 @@ def report_csv(alerts: list[dict]) -> str:
         values = [item["rule"], item["severity"], item["ip"], item["username"] or "", item["start"], item["end"], item["count"], " | ".join(item["users"]), " | ".join(map(str, item["rows"]))]
         writer.writerow(["'" + str(v) if str(v).startswith(("=", "+", "-", "@", "\t", "\r")) else v for v in values])
     return output.getvalue()
+
+
+def timeline(events: list[dict]) -> list[dict]:
+    """At least five-minute bins, at most 288 bins even across distant years."""
+    if not events:
+        return []
+    start, end = min(e["ms"] for e in events), max(e["ms"] for e in events)
+    width = max(300_000, (end - start + 288) // 288)
+    bins = [{"timestamp": datetime.fromtimestamp((start + i * width) / 1000, timezone.utc),
+             "success": 0, "failure": 0} for i in range((end - start) // width + 1)]
+    for event in events:
+        bins[(event["ms"] - start) // width][event["status"]] += 1
+    return bins

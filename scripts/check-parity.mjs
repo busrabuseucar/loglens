@@ -22,6 +22,8 @@ for(let set=0;set<35;set++){
 cases.push('\ufefftimestamp;ip;username;status;source\r\n2026-09-04T09:00:00Z;192.0.2.1;"A, B\nC";failure;"vp""n"\r\n');
 cases.push(encode([['2026-09-04T09:00:00.001Z','192.0.2.1','a','failure','vpn'],['2026-09-04T12:00:00.001+03:00','192.0.2.1','a','failure','vpn']]));
 cases.push(encode(['2026-02-30T09:00:00Z','2026-09-04T12:00:00+02:60','2026-09-04T24:00:00Z','2026-09-04T09:00:00.1234Z'].map(t=>[t,'192.0.2.1','a','failure','vpn'])));
+cases.push(header + '2026-09-04T09:00:00Z,192.0.2.1,' + 'x'.repeat(140000) + ',failure,vpn\n');
+cases.push('timestamp,ip,username,status,"ignored;;;;;;"\n2026-09-04T09:00:00Z,192.0.2.1,alice,failure,' + 'x'.repeat(140000) + '\n');
 const py=`import json,sys\nfrom loglens import parse_csv,analyze,report_csv\nout=[]\nfor text in json.load(sys.stdin):\n try:\n  p=parse_csv(text); r=analyze(p['events']); out.append({'events':p['events'],'duplicates':p['duplicates'],'total':p['total'],'errorRows':[e['row'] for e in p['errors']],'result':r,'csv':report_csv(r['alerts'])})\n except ValueError:\n  out.append({'rejected':True})\njson.dump(out,sys.stdout,ensure_ascii=False)\n`;
 const proc=spawnSync(process.env.LOG_LENS_PYTHON||'python',['-c',py],{input:JSON.stringify(cases),encoding:'utf8',maxBuffer:20*1024*1024});
 assert.equal(proc.status,0,proc.stderr);

@@ -62,7 +62,7 @@ function renderChart() {
   const bars=bins.map((b,i)=>{const x=left+i*step+(step-barW)/2,good=b.success/ceiling*plotH,bad=b.failure/ceiling*plotH;return `<g><title>${clock(b.ms)} UTC: ${b.success} başarılı, ${b.failure} başarısız</title><rect x="${x}" y="${H-bottom-good}" width="${barW}" height="${good}" rx="2" fill="#49b19a"/><rect x="${x}" y="${H-bottom-good-bad}" width="${barW}" height="${bad}" rx="2" fill="#e88976"/></g>`;}).join('');
   const labels=[...new Set([0,Math.floor((bins.length-1)/3),Math.floor(2*(bins.length-1)/3),bins.length-1])].map(i=>`<text x="${left+i*step+step/2}" y="${H-6}" text-anchor="middle">${clock(bins[i].ms).slice(0,5)}</text>`).join('');
   $('chart').innerHTML=`<svg role="img" aria-labelledby="chart-title chart-desc" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><title id="chart-title">Giriş kayıtlarının zamana göre dağılımı</title><desc id="chart-desc">${number(state.result.summary.success)} başarılı ve ${number(state.result.summary.failure)} başarısız giriş. Ayrıntılı kayıtlar Giriş kayıtları bölümünde.</desc>${grid}${bars}${labels}</svg>`;
-  $('chart-range').textContent=`${day(events[0].timestamp)} · ${clock(events[0].timestamp).slice(0,5)}–${clock(events.at(-1).timestamp).slice(0,5)}`;
+  $('chart-range').textContent=`${dateTime(events[0].timestamp)} – ${dateTime(events.at(-1).timestamp)} UTC`;
 }
 
 function renderFindings() {

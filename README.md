@@ -21,7 +21,7 @@ The hosted browser demo is public and can be opened by anyone with the link. Use
 - Export currently visible findings to CSV, with spreadsheet formula escaping.
 - Explore the R3 time window with a one-second slider, four presets and a downloadable modified sample. The experiment uses an isolated copy of synthetic data.
 - Run the Python/Streamlit version locally, or use the static browser demo.
-- Verify the two engines against 42 shared fixtures.
+- Verify the two engines against 44 shared fixtures.
 - Verify four R3 experiment presets across Python and JavaScript.
 
 ## Quick start — Python
@@ -152,11 +152,11 @@ Findings prioritize manual investigation. NAT/shared networks, password mistakes
 | `scripts/check-parity.mjs` | Cross-language checks on shared fixtures |
 | `.github/workflows/ci.yml` | Runs validation on push and pull request |
 
-The analysis is implemented twice to keep the learning-focused Python app while providing a deployable browser-only demo. Parity checks are required when changing rules. This extra maintenance cost is deliberate. The visual charts use different bin sizes (web: up to 24 adaptive buckets; Python: 5-minute buckets); their underlying event counts and findings agree.
+The analysis is implemented twice to keep the learning-focused Python app while providing a deployable browser-only demo. Parity checks are required when changing rules. This extra maintenance cost is deliberate. The visual charts use different bin sizes (web: up to 24 adaptive buckets; Python: at least 5-minute buckets, capped at 288); their underlying event counts and findings agree. Both charts stay bounded even when records span many years.
 
 ## Tests
 
-Node.js 22 is needed for the browser-engine tests; no npm packages are required.
+Node.js 22 is needed for JavaScript tests. Engine tests use only Node built-ins; browser tests additionally use Playwright and Chromium.
 
 ```bash
 python -m unittest discover -s tests -v
@@ -165,18 +165,21 @@ node --test tests/web.test.mjs
 node scripts/check-parity.mjs
 node --check dist/app.js
 node --check dist/engine.js
+npm ci
+npx playwright install chromium
+npm run test:browser
 ```
 
-Coverage includes exact time-window boundaries, distinct-account counting, successful-login resets, timezone normalization, duplicate suppression, malformed CSV, formula-safe exports, a 20,000-record input, expected demo results and Streamlit filtering. The status badge above links to the actual GitHub Actions runs. Local verification alone does not establish a passing GitHub run. No visual browser QA was run in this delivery.
+Coverage includes exact time-window boundaries, distinct-account counting, successful-login resets, timezone normalization, duplicate suppression, malformed CSV, formula-safe exports, a 20,000-record input, expected demo results and Streamlit filtering. The status badge above links to the actual GitHub Actions runs. Local verification alone does not establish a passing GitHub run. Playwright exercises the static demo in desktop and mobile Chromium: evidence navigation, pagination, filtered export, the R3 boundary experiment and re-upload, malformed upload recovery, HTML escaping and reload behavior. These tests use the actual static files and rule engine; no API is mocked.
 
 ## Demo hosting
 
 The linked Sites demo is publicly accessible. To host your own copy, generate the source bundle and publish the `dist/` directory with a static host. GitHub Pages serves the browser demo, not the Python app.
 
-Generated `dist/download/` bundles are intentionally ignored by Git. The CI workflow creates a fresh bundle before validating local asset links. The repository never includes Sites account identifiers or access credentials.
+Source bundles use explicit source paths and file types; local environment files, databases, symlinks and browser test output are excluded. Secrets embedded directly in an allowed source file are not automatically detected. Generated `dist/download/` bundles are intentionally ignored by Git. The CI workflow creates a fresh bundle before validating local asset links. The repository never includes Sites account identifiers or access credentials.
 
 ## Attribution
 
-A rule-based log analysis project by Büşra Buse Uçar. The learning checklist covers the analysis rules, validation and regression tests. The rule implementations here are original project code. [Loglizer](https://github.com/logpai/loglizer) was an idea/reference resource; its ML implementation is not embedded in this project.
+A rule-based log analysis project by Büşra Buse Uçar. The rule implementations here are original project code. [Loglizer](https://github.com/logpai/loglizer) was an idea/reference resource; its ML implementation is not embedded in this project.
 
 MIT licensed; see [LICENSE](LICENSE). Dependencies retain their respective licenses.

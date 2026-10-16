@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from loglens import analyze, parse_csv, report_csv
-from loglens.engine import MAX_BYTES
+from loglens.engine import MAX_BYTES, timeline
 from loglens.experiment import run_r3_experiment
 
 ROOT = Path(__file__).resolve().parent
@@ -67,9 +67,9 @@ overview, records_tab, rules_tab, experiment_tab = st.tabs(["Genel bakış", "Gi
 frame = pd.DataFrame(parsed["events"])
 with overview:
     st.subheader("Giriş hareketleri")
-    chart_data = frame.assign(time=pd.to_datetime(frame["timestamp"], utc=True)).set_index("time")
-    chart = chart_data.groupby([pd.Grouper(freq="5min"), "status"]).size().unstack(fill_value=0)
+    chart = pd.DataFrame(timeline(parsed["events"])).set_index("timestamp")
     st.bar_chart(chart.rename(columns={"failure": "Başarısız", "success": "Başarılı"}))
+    st.caption("UTC · En az 5 dakikalık, en fazla 288 zaman dilimi; uzun aralıklarda dilim genişliği artar.")
     st.subheader("İncelenecek bulgular")
     left, right = st.columns([2, 1])
     query = left.text_input("IP veya hesap ara")

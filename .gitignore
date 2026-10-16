@@ -13,3 +13,4 @@ test-results/
 # Generated source download and hosting identity
 dist/download/
 .openai/
+playwright-report/

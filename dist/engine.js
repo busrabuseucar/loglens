@@ -48,8 +48,15 @@ function dateValue(value) {
 export function parseCsv(text) {
   if (new TextEncoder().encode(text).length > MAX_BYTES) throw new Error('Dosya en fazla 2 MB olabilir.');
   text = text.replace(/^\uFEFF/, '');
-  const first = text.split(/[\r\n]/)[0] || '';
-  const delimiter = (first.match(/;/g) || []).length > (first.match(/,/g) || []).length ? ';' : ',';
+  const counts = {',': 0, ';': 0}; let quoted = false;
+  for (const char of text) {
+    if (char === '"') quoted = !quoted;
+    else if (!quoted) {
+      if (char === '\r' || char === '\n') break;
+      if (char in counts) counts[char]++;
+    }
+  }
+  const delimiter = counts[';'] > counts[','] ? ';' : ',';
   const rows = csvRows(text, delimiter);
   if (!rows.length) throw new Error('CSV dosyası boş.');
   const headers = rows[0].map(x => x.trim().toLowerCase());

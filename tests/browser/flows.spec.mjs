@@ -11,6 +11,7 @@ async function csvDownload(page, selector) {
 test('sample evidence, filters, export and experiment round trip', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#alert-count')).toHaveText('4');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.locator('#rule-filter').selectOption('R3');
   await expect(page.locator('#findings tbody tr')).toHaveCount(1);
   const exported = await csvDownload(page, '#export');
@@ -33,6 +34,7 @@ test('sample evidence, filters, export and experiment round trip', async ({ page
   expect(analyze(parseCsv(altered).events).alerts).toHaveLength(3);
   await page.locator('nav [data-view="overview"]').click();
   await expect(page.locator('#alert-count')).toHaveText('4');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.locator('#file-input').setInputFiles({ name: 'experiment.csv', mimeType: 'text/csv', buffer: Buffer.from(altered) });
   await expect(page.locator('#alert-count')).toHaveText('3');
   await expect(page.locator('#sample-badge')).toBeHidden();
@@ -43,9 +45,11 @@ test('invalid uploads preserve results and log text cannot become HTML', async (
   page.on('request', request => requests.push(request.url()));
   await page.goto('/');
   await expect(page.locator('#alert-count')).toHaveText('4');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.locator('#file-input').setInputFiles({ name: 'broken.csv', mimeType: 'text/csv', buffer: Buffer.from('timestamp,ip,username,status\n"unfinished') });
   await expect(page.locator('#notification')).toContainText('Önceki analiz korunuyor');
   await expect(page.locator('#alert-count')).toHaveText('4');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   const account = '<img src=x onerror=window.injected=1>';
   const csv = 'timestamp,ip,username,status\n' + [0,1,2,3].map((i) => `2026-09-04T09:00:0${i}Z,192.0.2.1,${account},${i === 3 ? 'success' : 'failure'}`).join('\n');
   await page.locator('#file-input').setInputFiles({ name: 'custom.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
@@ -59,4 +63,5 @@ test('invalid uploads preserve results and log text cannot become HTML', async (
   await page.reload();
   await expect(page.locator('#dataset-name')).toHaveText('sample.csv');
   await expect(page.locator('#alert-count')).toHaveText('4');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

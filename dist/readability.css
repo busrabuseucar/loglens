@@ -10,3 +10,8 @@ th{font-size:12px}
 .main-footer a{text-decoration:none;color:#087c6d;white-space:nowrap}
 .main-footer a:hover{text-decoration:underline}
 @media(max-width:720px){.stat-label{font-size:13px}.stat-note{line-height:1.5;min-height:36px}.page-heading p{font-size:15px}.select-wrap{font-size:12px}.select-wrap select{font-size:13px}.legend{font-size:12px;gap:5px}.panel-header{flex-wrap:wrap}.main-footer{gap:12px}.file-info>div{line-height:1.5}.data-actions button{font-size:14px}.nav-item{font-size:0}.chart-foot{flex-wrap:wrap;gap:6px}}
+/* Allow grid children to shrink; keep wide evidence tables inside their scroller. */
+.analysis-grid > .panel,.experiment-grid > .panel{min-width:0}
+.table-scroll{max-width:100%;overscroll-behavior-x:contain}
+.chart-foot>span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:720px){.analysis-grid{grid-template-columns:minmax(0,1fr)}}
